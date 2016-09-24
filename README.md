@@ -2,6 +2,7 @@
 
 To run server
 ```
+export DEBUG=r-fi:*
 node server/server.js
 ```
 
