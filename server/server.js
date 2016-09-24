@@ -24,8 +24,6 @@ const search = require('./search')
 app.get('/search/:value', (req, res) => {
   search(req.params.value, (err, results) => {
     if (err) {
-      log(Object.keys(err))
-      log('Encountered error: %j', err)
       return res.status(500).send(err)
     }
 
