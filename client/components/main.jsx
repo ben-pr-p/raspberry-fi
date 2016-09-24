@@ -16,15 +16,18 @@ export default class Main extends React.Component {
   }
 
   handleInput (value) {
-    api
-    .search(value)
-    .then(results => {
-      const rendered = results.map(r => this.renderResult(r))
-      this.setState({results: rendered})
-    })
-    .catch(err => {
-      debugger
-    })
+    debugger
+    if (value != " ") {
+      api
+      .search(value)
+      .then(results => {
+        const rendered = results.map(r => this.renderResult(r))
+        this.setState({results: rendered})
+      })
+      .catch(err => {
+        debugger
+      })
+    }
   }
 
   selectVideo (ev) {
@@ -61,4 +64,3 @@ export default class Main extends React.Component {
     }
   }
 }
-
