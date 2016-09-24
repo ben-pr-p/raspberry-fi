@@ -11,7 +11,7 @@ methods.search = function (value) {
         return reject(err)
       }
 
-      return resolve(res)
+      return resolve(res.body)
     })
   })
 }
@@ -26,7 +26,7 @@ methods.play = function (link) {
         reject(err)
       }
 
-      return resolve(res.body)
+      return resolve(res)
     })
   })
 }

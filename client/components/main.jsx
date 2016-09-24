@@ -22,6 +22,7 @@ export default class Main extends React.Component {
       api
       .search(value)
       .then(results => {
+        console.log(results)
         const rendered = results.map(r => this.renderResult(r))
         this.setState({results: rendered})
       })

@@ -42,7 +42,9 @@ app.get('/search/:value', (req, res) => {
 })
 
 app.get('/play/:link', (req, res) => {
-  youtubeStream(req.params.link).pipe(speaker)
+  youtubeStream(req.params.link).on('data', function (data) {
+    log(data)
+  })
   res.sendStatus(200)
 })
 
