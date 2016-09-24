@@ -17,9 +17,9 @@ module.exports = class OutputManager {
   repipe (inputStream) {
     // to write
     outputs.forEach((output) => {
-        //inputStream.pipe(output)
+        inputStream.pipe(output) // pipe the input to output
         //TODO: not a player 
-        output.play()
+       // output.play()
     })
   }
 
