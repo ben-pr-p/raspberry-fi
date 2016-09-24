@@ -3,7 +3,7 @@
 const wired = require('./wired')
 
 const outputStreams = {
-  wired: require('./wired')
+  wired: wired
 }
 
 module.exports = class OutputManager {
@@ -16,7 +16,7 @@ module.exports = class OutputManager {
   // takes in audio stream
   repipe (inputStream) {
     // to write
-    outputs.forEach((output) => {
+    this.outputs.forEach((output) => {
         inputStream.pipe(output) // pipe the input to output
         //TODO: not a player 
        // output.play()

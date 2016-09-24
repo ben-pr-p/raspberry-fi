@@ -30,8 +30,6 @@ app.get('/', (req, res) => {
 
 const search = require('./search')
 const Output = require('./output')
-console.log('CALLING REPIPE')
-Output.repipe()
 
 const manager = new Output()
 
@@ -47,8 +45,7 @@ app.get('/search/:value', (req, res) => {
 })
 
 app.get('/play/:link', (req, res) => {
-
-  youtubeStream(req.params.link).pipe(speaker)
+  manager.repipe(youtubeStream(req.params.link))
   res.sendStatus(200)
 })
 
