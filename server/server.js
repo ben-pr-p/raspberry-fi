@@ -45,9 +45,6 @@ app.get('/search/:value', (req, res) => {
 })
 
 app.get('/play/:link', (req, res) => {
-  //youtubeStream(req.params.link).on('data', function (data) {
-    //log(data)
-  //})
   youtubeStream(req.params.link).pipe(decoder)
   decoder.pipe(speaker)
   res.sendStatus(200)
