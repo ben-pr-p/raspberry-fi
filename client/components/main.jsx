@@ -13,19 +13,22 @@ export default class Main extends React.Component {
     this.state = {
       results: []
     }
-
-    console.log(api)
   }
 
   handleInput (value) {
     api
     .search(value)
     .then(results => {
-      this.setState({results})
+      const rendered = results.map(r => this.renderResult(r))
+      this.setState({results: rendered})
     })
     .catch(err => {
       debugger
     })
+  }
+
+  selectVideo (ev) {
+    const link = ev.getAttribute('data')
   }
 
   render () {
@@ -42,4 +45,20 @@ export default class Main extends React.Component {
       </MuiThemeProvider>
     )
   }
+
+  renderResult (video) {
+    return {
+      text: video.title,
+      value: (
+        <Paper className='video-result'
+          onClick={this.selectVideo.bind(this)}
+          data={video.link}
+        >
+          <img src={video.thumbnail} />
+          {video.title}
+        </Paper>
+      )
+    }
+  }
 }
+
