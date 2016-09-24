@@ -3,6 +3,15 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const log = require('debug')('r-fi:app')
+const Speaker = require('speaker')
+
+const speaker = new Speaker({
+  channels: 2,
+  bitDepth: 16,
+  sampleRate: 44100
+})
+
+const youtubeStream = require('youtube-audio-stream')
 
 const app = express()
 app.use(bodyParser.json())
@@ -30,6 +39,11 @@ app.get('/search/:value', (req, res) => {
     log('Found search results %j', results)
     return res.json(results)
   })
+})
+
+app.get('/play/:link', (req, res) => {
+  youtubeStream(req.params.link).pipe(speaker)
+  res.sendStatus(200)
 })
 
 log('Listening on 3000...')

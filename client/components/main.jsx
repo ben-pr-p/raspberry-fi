@@ -4,7 +4,9 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme'
 import AutoComplete from 'material-ui/AutoComplete'
 import Paper from 'material-ui/Paper'
+import MenuItem from 'material-ui/MenuItem'
 import api from '../api/index'
+import closest from 'component-closest'
 
 export default class Main extends React.Component {
   constructor () {
@@ -16,19 +18,31 @@ export default class Main extends React.Component {
   }
 
   handleInput (value) {
+    if (value && value != '') {
+      api
+      .search(value)
+      .then(results => {
+        const rendered = results.map(r => this.renderResult(r))
+        this.setState({results: rendered})
+      })
+      .catch(err => {
+        debugger
+      })
+    }
+  }
+
+  selectVideo (ev) {
+    const clicked = closest(ev.target, '.video-result', true)
+    const link = clicked.getAttribute('data')
+
     api
-    .search(value)
-    .then(results => {
-      const rendered = results.map(r => this.renderResult(r))
-      this.setState({results: rendered})
+    .play(link)
+    .then(ok => {
+      console.log(ok)
     })
     .catch(err => {
       debugger
     })
-  }
-
-  selectVideo (ev) {
-    const link = ev.getAttribute('data')
   }
 
   render () {
@@ -50,13 +64,13 @@ export default class Main extends React.Component {
     return {
       text: video.title,
       value: (
-        <Paper className='video-result'
+        <MenuItem className='video-result'
           onClick={this.selectVideo.bind(this)}
           data={video.link}
         >
           <img src={video.thumbnail} />
           {video.title}
-        </Paper>
+        </MenuItem>
       )
     }
   }

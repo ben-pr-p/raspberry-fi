@@ -11,6 +11,21 @@ methods.search = function (value) {
         return reject(err)
       }
 
+      return resolve(res)
+    })
+  })
+}
+
+methods.play = function (link) {
+  const id = link.split('=')[1]
+  return new Promise((resolve, reject) => {
+    request
+    .get(`play/${id}`)
+    .end((err, res) => {
+      if (err) {
+        reject(err)
+      }
+
       return resolve(res.body)
     })
   })
