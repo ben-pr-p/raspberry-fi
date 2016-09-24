@@ -20,4 +20,6 @@ Build then watch?
 ```
 gulp
 ```
+
+To connect to the pi, the Pi's IP address is: 129.170.71.165
 Build with Node 6.6.0, NPM 3.10.3

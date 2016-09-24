@@ -20,6 +20,11 @@ app.get('/', (req, res) => {
  */
 
 const search = require('./search')
+const Output = require('./output')
+console.log('CALLING REPIPE')
+Output.repipe()
+
+const manager = new Output()
 
 app.get('/search/:value', (req, res) => {
   search(req.params.value, (err, results) => {
