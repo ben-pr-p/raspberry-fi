@@ -3,13 +3,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const log = require('debug')('r-fi:app')
-const Speaker = require('speaker')
-
-const speaker = new Speaker({
-  channels: 2,
-  bitDepth: 16,
-  sampleRate: 44100
-})
 
 const youtubeStream = require('youtube-audio-stream')
 
@@ -45,6 +38,7 @@ app.get('/search/:value', (req, res) => {
 })
 
 app.get('/play/:link', (req, res) => {
+
   manager.repipe(youtubeStream(req.params.link))
   res.sendStatus(200)
 })
