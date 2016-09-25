@@ -1,9 +1,11 @@
 import React from 'react'
 import MenuItem from 'material-ui/MenuItem'
 import AppBar from 'material-ui/AppBar'
-import IconButton from 'material-ui/IconButton'
-import IconMenu from 'material-ui/IconMenu'
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
+import {GridList, GridTile} from 'material-ui/GridList'
+
+const images = {
+  wired: 'http://www.iphone-tips-and-advice.com/image-files/iPhone-speaker-wired.jpg',
+}
 
 export default class MyAppBar extends React.Component {
   constructor () {
@@ -31,28 +33,18 @@ export default class MyAppBar extends React.Component {
   render () {
     const blueDevices = this.state.devices.map(d => {
       return (
-        <MenuItem primaryText={d.name} />
+        <GridTile
+          key={d.name}
+          title={d.name}
+          subtitle={d.deviceType}
+        >
+          <img src={d.img} />
+        </GridTile>
       )
     })
 
     return (
-      <AppBar
-        className="AppBar"
-        title="Raspberry Fi"
-        iconElementLeft={
-          <IconMenu
-            iconButtonElement={
-              <IconButton><MoreVertIcon /></IconButton>
-            }
-            targetOrigin={{horizontal: 'left', vertical: 'top'}}
-            anchorOrigin={{horizontal: 'left', vertical: 'top'}}
-          >
-            <MenuItem primaryText="Bluetooth"
-              onClick={this.loadBluetoothDevices.bind(this)}
-              menuItems={blueDevices} />
-          </IconMenu>
-        }
-      />
+      {blueDevices}
     )
   }
 }

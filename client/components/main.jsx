@@ -61,7 +61,7 @@ export default class Main extends React.Component {
         <Paper>
           {tab}
           <Paper zDepth={1}>
-            <BottomNavigation selectedIndex={this.state.selectedIndex}>
+            <BottomNavigation style={{position: 'fixed'}} selectedIndex={this.state.selectedIndex} className='bottom-navigation'>
               <BottomNavigationItem
                 label="Queue"
                 icon={<QueueSVG />}
@@ -84,3 +84,4 @@ export default class Main extends React.Component {
     )
   }
 }
+

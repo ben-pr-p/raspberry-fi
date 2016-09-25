@@ -18,10 +18,10 @@ export default class Queue extends React.Component {
     super()
 
     this.state = {
-			playing: null,
+      playing: null,
       queue: []
-		}
-	}
+    }
+  }
 
   componentWillMount () {
     api
@@ -35,10 +35,10 @@ export default class Queue extends React.Component {
   }
 
   render () {
-		console.log('returning queue')
+    console.log('returning queue')
 
     return (
-			<Paper>
+      <Paper>
         {this.renderListSongs(this.state.queue)}
       </Paper>
     )
@@ -75,5 +75,5 @@ export default class Queue extends React.Component {
       {this.renderCurrentSong()}
       {songs}
     </List>)
-	}
+  }
 }
