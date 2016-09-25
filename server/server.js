@@ -23,8 +23,15 @@ const queue = []
 
 const youtube = require('./youtube')
 
+const Output = require('./output')
+const outManager = new Output()
+
+const setStream = (stream) => {
+  outManager.repipe(stream)
+}
+
 const Input = require('./input')
-const inManager = new Input()
+const inManager = new Input(setStream)
 
 app.get('/search/:value', (req, res) => {
   youtube.search(req.params.value, (err, results) => {
@@ -55,6 +62,7 @@ app.get('/queue/add/:link', (req, res) => {
 })
 
 app.get('/bluetooth/list', (req, res) => {
+  
   outManager.getDevices((err, result) => {
     if (err) {
       return res.status(500).send(err)

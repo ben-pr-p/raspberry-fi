@@ -1,6 +1,7 @@
 'use strict'
 
 const wired = require('./speakers/wired')
+const bluetooth = require('./speakers/bluetooth')
 const log = require('debug')('r-fi:output')
 
 const lame = require('lame')
@@ -48,5 +49,8 @@ module.exports = class OutputManager {
 
   }
 
-  // add methods for configuring the output
+  // add methods for getting bluetooth 
+  
+
+
 }

@@ -30,7 +30,7 @@ export default class Search extends React.Component {
     .addToQueue(link)
     .then(info => {
       console.log(info)
-      this.setState(info)
+      // this.setState(info)
     })
     .catch(err => {
       debugger

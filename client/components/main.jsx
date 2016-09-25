@@ -4,7 +4,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme'
 import AutoComplete from 'material-ui/AutoComplete'
 import RaisedButton from 'material-ui/RaisedButton'
-import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
+import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import FontIcon from 'material-ui/FontIcon'
 import Paper from 'material-ui/Paper'
 import Search from './search'
@@ -26,12 +26,11 @@ export default class Main extends React.Component {
   constructor () {
     super()
     this.state = {
-      activeTab: 0 // 0: queue, 1: search, 2: devices
+      activeTab: 1 // 0: queue, 1: search, 2: devices
     }
   }
 
   select (tab) {
-    console.log ('selecting tab', tab)
     this.setState({activeTab: tab});
   }
 

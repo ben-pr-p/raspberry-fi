@@ -4,7 +4,7 @@ const log = require('debug')('r-fi:bluetooth')
 const bluetoothSerialPort = require('bluetooth-serial-port')
 const btSerial = new bluetoothSerialPort.BluetoothSerialPort()
 
-export default class BluetoothManager {
+module.exports = class BluetoothManager {
   constructor () {
     this.devicesSeen = []
     this.connected = false

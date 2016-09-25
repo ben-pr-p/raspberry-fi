@@ -11,7 +11,8 @@ module.exports = class InputManager {
   }
 
   pad (num) {
-    if(num < 10) return "0" + num
+    debugger
+    if(num < 10 || num == "0") return "0" + num.toString()
     else return num
   }
 
