@@ -1,7 +1,6 @@
 'use strict'
 
 // Should export a stream
-const Speaker = require('./speaker')
-const speakerAPI = require('speaker')
+const SpeakerController = require('./speaker')
 
-module.exports = new Speaker()
+module.exports = new SpeakerController()

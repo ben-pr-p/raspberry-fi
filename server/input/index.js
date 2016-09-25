@@ -26,7 +26,7 @@ module.exports = class InputManager {
       const splitByM = nopt.split('M')
       let minutes = 0
       let seconds = 0
-      if (splitByM.length > 0) {
+      if (splitByM.length > 1) {
         minutes = nopt.split('M')[0]
         seconds = nopt.split('M')[1].split('S')[0]
       } else {
@@ -59,18 +59,39 @@ module.exports = class InputManager {
       return
     }
 
+    try {
+      console.log("POP ****")
+      this.playing = this.queue.pop()
+      console.dir(this.playing)
 
-    this.playing = this.queue.pop()
+      this.currentStream = youtube.streamAudio(this.playing.id)
 
-    this.currentStream = youtube.streamAudio(this.playing.id)
+      this.setStream(this.currentStream) // pipe to output
+      console.log("CURRENT STREAM SET ****")
 
-    this.currentStream.on('end', () => {
-      console.log("END EVENT EMITTED ****")
-      this.playNext()
-    })
 
-    console.log("ending the stream *** ")
+      this.currentStream.on('data', (chunk) => {
+        log(chunk)
+        log(chunk.length)
+      })
+      this.currentStream.on('error', () => {
+        log("END EVENT ERROR ****")
+        this.playNext()
+      })
+      this.currentStream.on('close', () => {
+        log(" EVENT CLOSE ****")
+        this.playNext()
+      })
+      this.currentStream.on('end', () => {
+        log(" EVENT END ****")
+        this.playNext()
+      })
 
-    this.setStream(this.currentStream)
+    }
+    catch (err) {
+      log("OSDIJFOSIDJF")
+
+    }
+  
   }
 }

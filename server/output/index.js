@@ -22,9 +22,9 @@ module.exports = class OutputManager {
     this.outputs.forEach((output) => {
       output.resetSpeaker()
 
-        inputStream
-          .pipe(decoder)
-          .pipe(output.speaker) // pipe the input to output
+      inputStream
+        .pipe(decoder)
+        .pipe(output.speaker) // pipe the input to output        
     })
   }
 
