@@ -15,7 +15,7 @@ import QueueMusic from 'material-ui/svg-icons/av/queue-music'
 import MenuItem from 'material-ui/MenuItem'
 import api from '../api/index'
 import closest from 'component-closest'
-import MyAppBar from './app-bar/app-bar'
+import Bluetooth from './bluetooth/bluetooth'
 
 export default class Main extends React.Component {
   constructor () {
@@ -89,7 +89,7 @@ export default class Main extends React.Component {
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
         <div>
-          {MyAppBar}
+          <MyAppBar />
           <Paper>
             {this.renderListSongs(this.state.queue)}
           </Paper>
