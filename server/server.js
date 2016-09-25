@@ -20,17 +20,7 @@ app.get('/', (req, res) => {
  */
 
 const youtube = require('./youtube')
-<<<<<<< HEAD
-=======
 
-const Output = require('./output')
-const outManager = new Output()
-
-const setStream = (stream) => {
-  outManager.repipe(stream)
-}
-
->>>>>>> 40752a6f59b69463893d6b2d9f5c2748c4f3cc02
 const Input = require('./input')
 const inManager = new Input(setStream)
 
@@ -84,7 +74,6 @@ app.get('/queue/add/:link', (req, res) => {
 })
 
 app.get('/bluetooth/list', (req, res) => {
-<<<<<<< HEAD
   log('GET /bluetooth/list')
 
   const result = bluetooth.getDevices()
@@ -94,13 +83,6 @@ app.get('/bluetooth/list', (req, res) => {
 
 app.get('/bluetooth/toggle/:address', (req, res) => {
   log('GET /bluetooth/toggle/%s', req.params.address)
-=======
-  
-  outManager.getDevices((err, result) => {
-    if (err) {
-      return res.status(500).send(err)
-    }
->>>>>>> 40752a6f59b69463893d6b2d9f5c2748c4f3cc02
 
   bluetooth.toggleConnectionTo(req.params.address, (err, devices) => {
     res.json(devices)
