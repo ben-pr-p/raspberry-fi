@@ -11,7 +11,8 @@ import Paper from 'material-ui/Paper'
 import {List, ListItem} from 'material-ui/List'
 import Subheader from 'material-ui/Subheader'
 import Divider from 'material-ui/Divider'
-import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble'
+import AudioTrack from 'material-ui/svg-icons/image/audiotrack'
+import QueueMusic from 'material-ui/svg-icons/av/queue-music'
 import MenuItem from 'material-ui/MenuItem'
 import api from '../api/index'
 import closest from 'component-closest'
@@ -130,7 +131,7 @@ export default class Main extends React.Component {
           key={this.state.playing.name}
           primaryText={this.state.playing.name}
           secondaryText={this.state.playing.duration}
-          rightIcon={<CommunicationChatBubble />}
+          rightIcon={<AudioTrack />}
         />
       )
     }
@@ -143,7 +144,7 @@ export default class Main extends React.Component {
           key={s.name}
           primaryText={s.name}
           secondaryText={s.duration}
-          rightIcon={<CommunicationChatBubble />}
+          rightIcon={<QueueMusic />}
         />
       )
     })
