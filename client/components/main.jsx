@@ -11,7 +11,8 @@ import Paper from 'material-ui/Paper'
 import {List, ListItem} from 'material-ui/List'
 import Subheader from 'material-ui/Subheader'
 import Divider from 'material-ui/Divider'
-import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble'
+import AudioTrack from 'material-ui/svg-icons/image/audiotrack'
+import QueueMusic from 'material-ui/svg-icons/av/queue-music'
 import MenuItem from 'material-ui/MenuItem'
 import api from '../api/index'
 import closest from 'component-closest'
@@ -84,11 +85,6 @@ export default class Main extends React.Component {
         opacity: 0
       }
     }
-    let songList = [
-      {name: 'cats', artist: 'dj'},
-      {name: 'dogs', artist: 'money'},
-      {name: 'birds', artist: 'bags'}
-    ]
 
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
@@ -99,14 +95,16 @@ export default class Main extends React.Component {
             iconClassNameRight="muidocs-icon-navigation-expand-more"
           />
           <Paper>
-            {this.renderListSongs(songList)}
+            {this.renderListSongs(this.state.queue)}
           </Paper>
           <Paper>
             <AutoComplete
               hintText='Search a song'
               dataSource={this.state.results}
               onUpdateInput={this.handleInput.bind(this)}
-              fullWidth={true}
+              style={{
+                width:'80%',
+                margin: 'auto'}}
               filter={AutoComplete.noFilter}
             />
           </Paper>
@@ -137,20 +135,38 @@ export default class Main extends React.Component {
     }
   }
 
+  renderCurrentSong() {
+    if (this.state.playing != null) {
+      return (
+        <ListItem
+          key={this.state.playing.name}
+          primaryText={this.state.playing.name}
+          secondaryText={this.state.playing.duration}
+          rightIcon={<AudioTrack />}
+        />
+      )
+    }
+  }
+
   renderListSongs(songList) {
     let songs = songList.map(s => {
       return (
         <ListItem
           key={s.name}
           primaryText={s.name}
-          secondaryText={s.artist}
-          rightIcon={<CommunicationChatBubble />}
+          secondaryText={s.duration}
+          rightIcon={<QueueMusic />}
         />
       )
     })
 
-    return (<List>
+    return (<List
+      style={{
+        width:'80%',
+        margin: 'auto'}}
+      >
       <Subheader>Queue</Subheader>
+      {this.renderCurrentSong()}
       {songs}
       </List>)
     }
