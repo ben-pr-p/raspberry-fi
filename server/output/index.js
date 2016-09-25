@@ -7,44 +7,69 @@ const log = require('debug')('r-fi:output')
 const lame = require('lame')
 const decoder = lame.Decoder()
 
-const outputStreams = {
-  wired: wired
+const types = {
+  bluetooth: require('./speakers/bluetooth'),
+  wired: require('./speakers/wired')
 }
 
 module.exports = class OutputManager {
   constructor () {
-    const keys = Object.keys(outputStreams);
-    this.outputs = keys.map((key) => outputStreams[key])
+    this.outputs = []
 
     this.started = false
     this.paused = false
-    this.downloaded = false
     this.endTimeout = null
 
     this.chunkQueue = []
+
+    this.currentInputStream = null
+  }
+
+  addOutput (type, params, fn) {
+    types[type](params, (err, output) => {
+      if (err) {
+        log('Found error: %j', err)
+      }
+
+      log('Created output %j', output)
+      this.outputs.push(output)
+      this.configureOutput(output)
+      return fn(null, output)
+    })
   }
 
   // takes in audio stream
   repipe (inputStream) {
+    this.currentInputStream = inputStream
+
+    log('Repiping...')
     this.paused = false
 
     this.outputs.forEach((output) => {
+      this.configureOutput(output)
+    })
+  }
+
+  configureOutput (output) {
+    log('Configuring %j', output)
+
+    if (this.currentInputStream) {
 
       const writeNext = () => {
         const nextChunk = this.chunkQueue.shift()
-
-        if (nextChunk)
-          output.speaker.write(nextChunk)
-        else
+        if (nextChunk) {
+          this.writeToAll(nextChunk)
+        } else {
           this.started = false
+        }
       }
 
       const writeEmpty = () => {
         const empty = Buffer.from(new Array(4608).fill(0))
-        output.speaker.write(empty)
+        this.writeToAll(empty)
       }
 
-      inputStream.on('data', (chunk) => {
+      this.currentInputStream.on('data', (chunk) => {
         decoder.write(chunk)
       })
 
@@ -62,11 +87,12 @@ module.exports = class OutputManager {
         }
 
         this.endTimeout = setTimeout(() => {
-          log('Ending process')
           clearTimeout(this.endTimeout)
-          if(!this.paused)
+          if (!this.paused) {
+            log('Ending process')
             process.exit()
-        }, 500)
+          }
+        }, 1000)
 
         if (this.paused) {
           return writeEmpty()
@@ -74,6 +100,16 @@ module.exports = class OutputManager {
           return writeNext()
         }
       })
+    }
+
+    else {
+      return null
+    }
+  }
+
+  writeToAll (chunk) {
+    this.outputs.forEach(o => {
+      o.speaker.write(chunk)
     })
   }
 

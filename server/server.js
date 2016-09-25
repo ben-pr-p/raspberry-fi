@@ -86,6 +86,10 @@ app.get('/bluetooth/toggle/:address', (req, res) => {
 
   bluetooth.toggleConnectionTo(req.params.address, (err, devices) => {
     res.json(devices)
+
+    log('Letting input manager know')
+    let d = devices.filter(d => d.connected)[0]
+    inManager.connectTo(d.address)
   })
 })
 

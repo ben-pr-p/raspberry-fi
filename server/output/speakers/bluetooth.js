@@ -1,30 +1,70 @@
 'use strict'
 
-const log = require('debug')('r-fi:bluetooth')
 const bluetoothSerialPort = require('bluetooth-serial-port')
 const btSerial = new bluetoothSerialPort.BluetoothSerialPort()
+const log = require('debug')('r-fi:bluetooth-speaker')
+const stream = require('stream')
 
-module.exports = class BluetoothManager {
-  constructor () {
-    this.devicesSeen = []
-    this.connected = false
+module.exports = function (address, fn) {
+  const data = {
+    name: 'bluetooth',
+    speaker: null
   }
 
-  inquire () {
-    btSerial.on('found', (address, name) => {
-      const seenAt = Date.now()
-      this.devicesSeen.push({address, name, seenAt})
-    })
-  }
+  btSerial.findSerialPortChannel(address.address, (channel) => {
+    log('Connecting to address %s', address.address)
 
-  connectTo (address) {
-    btSerial.findSerialPortChannel(address, channel => {
-      btSerial.connect(address, channel, () => {
-        const deviceName = this.devicesSeen.filter(d => d.address == address)
-        log('Connected to device: %s', deviceName)
+    btSerial.connect(address.address, channel, () => {
+      log('Connected')
 
-        this.connected = true
+      btSerial.on('data', (chunk) => {
+        log('Received %j from %s', chunk, address)
       })
+
+      data.speaker = new stream.Writable({
+        write: function (chunk, encoding, done) {
+          btSerial.write(chunk, (err, bytesWritten) => {
+            if (err) {
+              log(err)
+            }
+
+            else {
+              log(bytesWritten)
+              log('Wrote %d bytes', bytesWritten)
+            }
+
+            done()
+          })
+        }
+      })
+
+      fn(null, data)
     })
-  }
+
+    const empty = Buffer.from(new Array(4608).fill(0))
+    btSerial.write(empty, (err, bytesWritten) => {
+      log(err)
+      log(bytesWritten)
+    })
+
+    data.speaker = new stream.Writable({
+      write: function (chunk, encoding, done) {
+        btSerial.write(chunk, (err, bytesWritten) => {
+          log(err)
+          if (err) {
+            log(err)
+          }
+
+          else {
+            log(bytesWritten)
+            log('Wrote %d bytes', bytesWritten)
+          }
+
+          done()
+        })
+      }
+    })
+
+    return fn(null, data)
+  })
 }

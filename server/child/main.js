@@ -9,6 +9,8 @@ const output = new Output()
 let currentStream
 
 log('Spawning...')
+speakerConnect()
+
 
 process.on('message', ({message, data}) => {
   if (message == 'song') {
@@ -19,8 +21,18 @@ process.on('message', ({message, data}) => {
   if (message == 'pause') {
     pause()
   }
+
   if (message == 'resume') {
     resume()
+  }
+
+  if (message == 'bluetooth-connect') {
+    log('Happening 2')
+    bluetoothConnect(data)
+  }
+
+  if (message == 'bluetooth-disconnect') {
+    bluetoothDisconnect(data)
   }
 })
 
@@ -51,3 +63,24 @@ function pause (song) {
 function resume () {
   output.resume()
 }
+
+function speakerConnect () {
+  output.addOutput('wired', {}, (err, status) => {
+    if (err) {
+      log('Unable to add output with type [wired], params: %j -- error: %j', {address}, err)
+    }
+
+    log('Successfully added output with type [wired], params: %j', {}, err)
+  })
+}
+
+function bluetoothConnect (address) {
+  output.addOutput('bluetooth', {address}, (err, status) => {
+    if (err) {
+      log('Unable to add output with type [bluetooth], params: %j -- error: %j', {address}, err)
+    }
+
+    log('Successfully added output with type [bluetooth], params: %j', {address}, err)
+  })
+}
+
