@@ -44,6 +44,15 @@ app.get('/queue', (req, res) => {
   })
 })
 
+app.get('/skip', (req, res) => {
+  return inManager.skip((err) => {
+    return res.json({
+      playing: inManager.playing,
+      queue: inManager.queue
+    })
+  })
+})
+
 app.get('/resume', (req, res) => {
   return inManager.resume((err) => {
     if (err) {
@@ -63,8 +72,18 @@ app.get('/pause', (req, res) => {
 })
 
 app.get('/queue/add/:link', (req, res) => {
-  // queue returns an object {playing, queue}
+  // queue is an object {playing, queue}
   inManager.handleAdd(req.params.link, (err, queue) => {
+    if (err) {
+      return res.status(500).send(err)
+    }
+
+    return res.json(queue)
+  })
+})
+
+app.get('/queue/delete/:link', (req, res) => {
+  inManager.delete(req.params.link, (err, queue) => {
     if (err) {
       return res.status(500).send(err)
     }

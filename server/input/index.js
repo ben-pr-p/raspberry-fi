@@ -9,12 +9,34 @@ module.exports = class InputManager {
     this.queue = []
     this.playing = null // name of whatever is playing
     this.paused = null
+    this.child = null
   }
 
   pad (num) {
     if(num === "") return "00"
     else if(num < 10) return "0" + num.toString()
     else return num
+  }
+
+  skip () {
+    console.log("SKIPPING **** ")
+    // doesn't actually work
+    return fn(null, {
+      playing: this.playing,
+      queue: this.queue
+    })
+    // this.playNext()
+  }
+
+  delete(name, fn) {
+
+    const del = this.queue.filter((lnk) => lnk.name === name)[0] 
+
+    this.queue.splice(this.queue.indexOf(del), 1)
+    return fn(null, {
+      playing: this.playing,
+      queue: this.queue
+    })
   }
 
   handleAdd (link, fn) {
@@ -63,7 +85,6 @@ module.exports = class InputManager {
     })
 
   }
-
 
 
   closeChild (fn) {

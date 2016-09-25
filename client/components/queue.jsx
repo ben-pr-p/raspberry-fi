@@ -4,6 +4,7 @@ import {List, ListItem} from 'material-ui/List'
 import PauseSVG from 'material-ui/svg-icons/av/pause-circle-outline'
 import PlaySVG from 'material-ui/svg-icons/av/play-circle-outline'
 import IconButton from 'material-ui/IconButton'
+import SkipSVG from 'material-ui/svg-icons/av/skip-next'
 import ClearSVG from 'material-ui/svg-icons/content/clear'
 import MenuItem from 'material-ui/MenuItem'
 import api from '../api/index'
@@ -17,6 +18,7 @@ export default class Queue extends React.Component {
   }
 
   render () {
+    debugger
     const {playing, queue} = this.props.info
 
     return (
@@ -45,9 +47,30 @@ export default class Queue extends React.Component {
     }
   }
 
+  deleteSong (link) {
+    api.deleteFromQueue(link)
+      .then(info => {
+        this.props.handleDelete(info)
+      })
+      .catch(err => {
+        console.error('deleting not working')
+      })
+  }
+
+  skipSong() {
+    api
+    .skip()
+      .then(info => {
+        this.props.handleDelete(info)
+      })
+      .catch(err => {
+        console.error('skip failed')
+      })
+  }
+
 
   renderCurrentSong() {
-    const {playing, queue, paused} = this.props.info
+    const {playing, queue, paused} = this.props.info // what is playing is never in queued
 
     if (playing.name != null) {
       console.log('returning current song')
@@ -60,7 +83,7 @@ export default class Queue extends React.Component {
              (<IconButton onTouchTap={this.buttonPressed.bind(this, false)}><PlaySVG /></IconButton>):
              (<IconButton onTouchTap={this.buttonPressed.bind(this, true)}><PauseSVG /></IconButton>)
            }
-          leftIcon={<IconButton onTouchTap={() => console.log(`need to delete ${playing.name}`)}><ClearSVG /></IconButton>}
+         leftIcon={<IconButton onTouchTap={this.skipSong.bind(this)}><SkipSVG /></IconButton>}
         />
       )
     }
@@ -73,7 +96,7 @@ export default class Queue extends React.Component {
           key={s.name}
           primaryText={s.name}
           secondaryText={s.duration}
-          leftIcon={<ClearSVG />}
+          leftIcon={<IconButton onTouchTap={this.deleteSong.bind(this, s.name)}><ClearSVG /></IconButton>}
         />
       )
     })

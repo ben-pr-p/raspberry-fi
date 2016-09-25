@@ -49,9 +49,37 @@ methods.addToQueue = function (link) {
     .get(`queue/add/${id}`)
     .end((err, res) => {
       if (err) {
+        console.log(err)
         return reject(err)
       }
 
+      return resolve(res.body)
+    })
+  })
+}
+
+methods.deleteFromQueue = function (id) {
+  return new Promise((resolve, reject) => {
+    request
+    .get(`queue/delete/${id}`)
+    .end((err, res) => {
+      if (err) {
+        return reject(err)
+      }
+
+      return resolve(res.body)
+    })
+  })
+}
+
+methods.skip = function () {
+  return new Promise((resolve, reject) => {
+    request
+    .get('skip')
+    .end((err, res) => {
+      if (err) {
+        return reject(err)
+      }
       return resolve(res.body)
     })
   })

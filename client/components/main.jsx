@@ -25,14 +25,16 @@ export default class Main extends React.Component {
   }
 
   componentWillMount () {
-    api
-    .getQueue()
-    .then(info => {
-      this.setState(info)
-    })
-    .catch(err => {
-      debugger
-    })
+    // setInterval( () =>
+      api
+      .getQueue()
+      .then(info => {
+        this.setState(info)
+      })
+      .catch(err => {
+      })
+      // , 500)
+
   }
 
   select (tab) {
@@ -41,6 +43,12 @@ export default class Main extends React.Component {
 
   handleQueueAdd (info) {
     this.setState({info, activeTab: 0}) // sets the queue
+  }
+
+  handleDelete (info) {
+    console.log(info)
+    this.setState({info, activeTab: 0})
+    console.log('current state: ', this.state)
   }
 
   render () {
@@ -60,8 +68,9 @@ export default class Main extends React.Component {
         break
       default:
         console.log('Case 0')
+        console.log(this.state.info)
         tab = (
-          <Queue info={this.state.info}/>
+          <Queue handleDelete={this.handleDelete.bind(this)} info={this.state.info}/>
         )
         break
     }
