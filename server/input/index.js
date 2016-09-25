@@ -1,6 +1,7 @@
 'use strict'
 
-const youtubeStream = require('youtube-audio-stream')
+const log = require('debug')('r-fi:input')
+const youtube = require('../youtube')
 
 module.exports = class InputManager {
   constructor (setStream) {
@@ -15,10 +16,13 @@ module.exports = class InputManager {
       shouldStart = true
     }
 
-    this.queue.push(link)
-    if (shouldStart) {
-      this.playNext()
-    }
+    youtube.infoFor(link, (err, result) => {
+      this.queue.push(link)
+      if (shouldStart) {
+        this.playNext()
+      }
+    })
+
   }
 
   playNext () {
@@ -26,7 +30,7 @@ module.exports = class InputManager {
       return
     }
 
-    this.currentStream = youtubeStream(this.queue.pop())
+    this.currentStream = youtube.streamAudio(this.queue.pop())
 
     this.currentStream.on('end', () => {
       this.playNext()
