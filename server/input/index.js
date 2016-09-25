@@ -4,9 +4,9 @@ const log = require('debug')('r-fi:input')
 const youtube = require('../youtube')
 
 module.exports = class InputManager {
-  constructor (setStream) {
+  constructor (stream) {
     this.queue = []
-    this.setStream = setStream
+    this.setStream = stream 
     this.currentStream = null
     this.playing = null
   }
@@ -22,8 +22,16 @@ module.exports = class InputManager {
       const duration = result.items[0].contentDetails.duration
 
       const nopt = duration.slice(2)
-      const minutes = nopt.split('M')[0]
-      const seconds = nopt.split('M')[1].split('S')[0]
+
+      const splitByM = nopt.split('M')
+      let minutes = 0
+      let seconds = 0
+      if (splitByM.length > 1) {
+        minutes = nopt.split('M')[0]
+        seconds = nopt.split('M')[1].split('S')[0]
+      } else {
+        seconds = nopt.split('S')[0]
+      }
 
       const video = {
         name: labels.title,
@@ -45,17 +53,45 @@ module.exports = class InputManager {
   }
 
   playNext () {
+    console.log("AT BEGINNING OF PLAY NEXT")
+    console.dir(this.queue)
     if (this.queue.length == 0) {
       return
     }
 
-    this.playing = this.queue.pop()
-    this.currentStream = youtube.streamAudio(this.playing.id)
+    try {
+      console.log("POP ****")
+      this.playing = this.queue.pop()
+      console.dir(this.playing)
 
-    this.currentStream.on('end', () => {
-      this.playNext()
-    })
+      this.currentStream = youtube.streamAudio(this.playing.id)
 
-    this.setStream(this.currentStream)
+      this.setStream(this.currentStream) // pipe to output
+      console.log("CURRENT STREAM SET ****")
+
+
+      this.currentStream.on('data', (chunk) => {
+        log(chunk)
+        log(chunk.length)
+      })
+      this.currentStream.on('error', () => {
+        log("END EVENT ERROR ****")
+        this.playNext()
+      })
+      this.currentStream.on('close', () => {
+        log(" EVENT CLOSE ****")
+        this.playNext()
+      })
+      this.currentStream.on('end', () => {
+        log(" EVENT END ****")
+        this.playNext()
+      })
+
+    }
+    catch (err) {
+      log("OSDIJFOSIDJF")
+
+    }
+  
   }
 }

@@ -23,7 +23,7 @@ methods.addToQueue = function (link) {
     .get(`queue/add/${id}`)
     .end((err, res) => {
       if (err) {
-        reject(err)
+        return reject(err)
       }
 
       return resolve(res.body)
@@ -31,4 +31,32 @@ methods.addToQueue = function (link) {
   })
 }
 
+methods.getQueue = function () {
+  return new Promise((resolve, reject) => {
+    request
+    .get('queue')
+    .end((err, res) => {
+      if (err) {
+        return reject(err)
+      }
+
+      return resolve(res.body)
+    })
+  })
+}
+
+methods.bluetoothList = function () {
+  return new Promise((resolve, reject) => {
+    request
+    .get('bluetooth/list')
+    .end((err, res) => {
+      if (err) {
+        return reject(err)
+      }
+
+      return resolve(res.body)
+    })
+  })
+}
 export default methods
+
