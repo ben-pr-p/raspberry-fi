@@ -21,13 +21,13 @@ export default class Main extends React.Component {
     super()
 
     this.state = {
+      playing: null,
+      queue: [],
       results: []
     }
   }
 
   handleInput (value) {
-
-
     if (value && value != '') {
       api
       .search(value)
@@ -48,8 +48,9 @@ export default class Main extends React.Component {
 
     api
     .addToQueue(link)
-    .then(queue => {
-      console.log(queue)
+    .then(info => {
+      console.log(info)
+      this.setState(info)
     })
     .catch(err => {
       debugger
