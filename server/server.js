@@ -20,9 +20,10 @@ app.get('/', (req, res) => {
  */
 
 const youtube = require('./youtube')
-
 const Input = require('./input')
 const inManager = new Input()
+
+const bluetooth = require('./bluetooth')
 
 app.get('/search/:value', (req, res) => {
   youtube.search(req.params.value, (err, results) => {
@@ -53,12 +54,18 @@ app.get('/queue/add/:link', (req, res) => {
 })
 
 app.get('/bluetooth/list', (req, res) => {
-  outManager.getDevices((err, result) => {
-    if (err) {
-      return res.status(500).send(err)
-    }
+  log('GET /bluetooth/list')
 
-    return res.json(result)
+  const result = bluetooth.getDevices()
+  log('Done inquiring...')
+  return res.json(result)
+})
+
+app.get('/bluetooth/toggle/:address', (req, res) => {
+  log('GET /bluetooth/toggle/%s', req.params.address)
+
+  bluetooth.toggleConnectionTo(req.params.address, (err, devices) => {
+    res.json(devices)
   })
 })
 

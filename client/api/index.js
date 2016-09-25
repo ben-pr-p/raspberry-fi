@@ -58,4 +58,20 @@ methods.bluetoothList = function () {
     })
   })
 }
+
+methods.toggleBluetooth = function (address) {
+  return new Promise((resolve, reject) => {
+    request
+    .get(`bluetooth/toggle/${address}?random=${Math.random()}`)
+    .end((err, res) => {
+      if (err) {
+        return reject(err)
+      }
+
+      return resolve(res.body)
+    })
+  })
+}
+
+
 export default methods

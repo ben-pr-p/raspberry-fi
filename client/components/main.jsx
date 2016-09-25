@@ -6,6 +6,7 @@ import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigati
 import Paper from 'material-ui/Paper'
 import Search from './search'
 import Queue from './queue'
+import Bluetooth from './bluetooth/bluetooth'
 import api from '../api/index'
 import QueueSVG from 'material-ui/svg-icons/av/queue'
 import SearchSVG from 'material-ui/svg-icons/action/search'
@@ -41,16 +42,18 @@ export default class Main extends React.Component {
   }
 
   render () {
-
     let tab
     switch (this.state.activeTab) {
       case 2:
         console.log('Case 2')
+        tab = (
+          <Bluetooth />
+        )
         break
       case 1:
         console.log('Case 1')
         tab = (
-          <Search handleQueueAdd = {this.handleQueueAdd.bind(this)}/>
+          <Search handleQueueAdd={this.handleQueueAdd.bind(this)}/>
         )
         break
       default:
