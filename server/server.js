@@ -44,6 +44,13 @@ app.get('/search/:value', (req, res) => {
   })
 })
 
+app.get('/queue', (req, res) => {
+  return res.json({
+    playing: inManager.playing,
+    queue: inManager.queue
+  })
+})
+
 app.get('/queue/add/:link', (req, res) => {
   inManager.handleAdd(req.params.link, (err, queue) => {
     res.json(queue)

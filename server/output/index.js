@@ -25,5 +25,6 @@ module.exports = class OutputManager {
     })
   }
 
+
   // add methods for configuring the output
 }
