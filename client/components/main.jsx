@@ -48,8 +48,8 @@ export default class Main extends React.Component {
 
     api
     .addToQueue(link)
-    .then(ok => {
-      console.log(ok)
+    .then(queue => {
+      console.log(queue)
     })
     .catch(err => {
       debugger

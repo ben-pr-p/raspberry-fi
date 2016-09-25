@@ -45,8 +45,9 @@ app.get('/search/:value', (req, res) => {
 })
 
 app.get('/queue/add/:link', (req, res) => {
-  inManager.handleAdd(req.params.link)
-  res.json(inManager.queue)
+  inManager.handleAdd(req.params.link, (err, queue) => {
+    res.json(queue)
+  })
 })
 
 log('Listening on 3000...')

@@ -1,7 +1,7 @@
 'use strict'
 
 const search = require('youtube-search')
-const log = require('debug')('r-fi:search')
+const log = require('debug')('r-fi:youtube')
 const youtubeStream = require('youtube-audio-stream')
 
 const API_KEY = process.env.API_KEY
@@ -39,9 +39,7 @@ const youtube = new Youtube();
 
 youtube.setKey(API_KEY)
 
-module.exports.infoFor = function (link, fn) {
-  const id = link.split('=')[1]
-
+module.exports.infoFor = function (id, fn) {
   youtube.getById(id, (err, result) => {
     if (err) {
       log(JSON.stringify(err))

@@ -8,19 +8,38 @@ module.exports = class InputManager {
     this.queue = []
     this.setStream = setStream
     this.currentStream = null
+    this.playing = null
   }
 
-  handleAdd (link) {
+  handleAdd (link, fn) {
     let shouldStart = false
     if (this.queue.length == 0) {
       shouldStart = true
     }
 
     youtube.infoFor(link, (err, result) => {
-      this.queue.push(link)
+      const labels = result.items[0].snippet
+      const duration = result.items[0].contentDetails.duration
+
+      const nopt = duration.slice(2)
+      const minutes = nopt.split('M')[0]
+      const seconds = nopt.split('M')[1].split('S')[0]
+
+      const video = {
+        name: labels.title,
+        duration: `${minutes}:${seconds}`,
+        id: link
+      }
+
+      this.queue.push(video)
       if (shouldStart) {
         this.playNext()
       }
+
+      return fn(null, {
+        playing: this.playing,
+        queue: this.queue
+      })
     })
 
   }
@@ -30,7 +49,8 @@ module.exports = class InputManager {
       return
     }
 
-    this.currentStream = youtube.streamAudio(this.queue.pop())
+    this.playing = this.queue.pop()
+    this.currentStream = youtube.streamAudio(this.playing.id)
 
     this.currentStream.on('end', () => {
       this.playNext()
