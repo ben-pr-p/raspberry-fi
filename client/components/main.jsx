@@ -73,9 +73,9 @@ export default class Main extends React.Component {
       }
     }
     let songList = [
-      {name: 'cats'},
-      {name: 'dogs'},
-      {name: 'birds'}
+      {name: 'cats', artist: 'dj'},
+      {name: 'dogs', artist: 'money'},
+      {name: 'birds', artist: 'bags'}
     ]
 
     return (
@@ -87,9 +87,9 @@ export default class Main extends React.Component {
             iconClassNameRight="muidocs-icon-navigation-expand-more"
           />
           <Paper>
-          {this.renderListSongs(songList)}
-        </Paper>
-         <Paper>
+            {this.renderListSongs(songList)}
+          </Paper>
+          <Paper>
             <AutoComplete
               hintText='Search a song'
               dataSource={this.state.results}
@@ -118,8 +118,8 @@ export default class Main extends React.Component {
           onClick={this.selectVideo.bind(this)}
           data={video.link}
         >
-          <img src={video.thumbnail} />
-          {video.title}
+        <img src={video.thumbnail} />
+        {video.title}
         </MenuItem>
       )
     }
@@ -131,14 +131,15 @@ export default class Main extends React.Component {
         <ListItem
           key={s.name}
           primaryText={s.name}
+          secondaryText={s.artist}
           rightIcon={<CommunicationChatBubble />}
         />
       )
     })
 
-  return (<List>
-    <Subheader>Queue</Subheader>
-    {songs}
-  </List>)
+    return (<List>
+      <Subheader>Queue</Subheader>
+      {songs}
+      </List>)
+    }
   }
-}
