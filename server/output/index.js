@@ -15,38 +15,51 @@ module.exports = class OutputManager {
   constructor () {
     const keys = Object.keys(outputStreams);
     this.outputs = keys.map((key) => outputStreams[key])
+
+    this.started = false
     this.paused = false
+    this.downloaded = false
     this.endTimeout = null
+
+    this.chunkQueue = []
   }
 
   // takes in audio stream
   repipe (inputStream) {
     this.paused = false
-    // to write
+
     this.outputs.forEach((output) => {
 
+      const writeNext = () => {
+        const nextChunk = this.chunkQueue.shift()
+
+        if (nextChunk)
+          output.speaker.write(nextChunk)
+        else
+          this.started = false
+      }
+
+      const writeEmpty = () => {
+        const empty = Buffer.from(new Array(4608).fill(0))
+        output.speaker.write(empty)
+      }
+
       inputStream.on('data', (chunk) => {
-        console.log("input chunk")
         decoder.write(chunk)
       })
 
-      console.time('drain')
-
-      // decoder.on('data', (chunk) => {
-      //   if(!this.paused){
-      //     console.log(chunk)
-      //     output.speaker.write(chunk)
-      //   } else {
-      //     console.log("preventing write")
-      //   }
-      // })   
-      decoder.pipe(output.speaker)   
+      decoder.on('data', (chunk) => {
+        this.chunkQueue.push(chunk)
+        if (!this.started) {
+          this.started = true
+          writeNext()
+        }
+      })
 
       output.speaker.on('drain', () => {
-        console.log("DRAINING")
-        console.log(this.paused)
-        if (this.endTimeout)
+        if (this.endTimeout) {
           clearTimeout(this.endTimeout)
+        }
 
         this.endTimeout = setTimeout(() => {
           log('Ending process')
@@ -54,13 +67,18 @@ module.exports = class OutputManager {
           if(!this.paused)
             process.exit()
         }, 500)
+
+        if (this.paused) {
+          return writeEmpty()
+        } else {
+          return writeNext()
+        }
       })
     })
-
   }
 
   pause () {
-    console.log("PAUSE *** ")
+    log('Pausing...')
     this.paused = true
     this.outputs.forEach((output) => {
       decoder.pause()
@@ -68,14 +86,11 @@ module.exports = class OutputManager {
   }
 
   resume() {
+    log('Resuming...')
     this.paused = false
     this.outputs.forEach((output) => {
       decoder.resume()
     })
   }
-
-  // add methods for getting bluetooth 
-
-
-
 }
+

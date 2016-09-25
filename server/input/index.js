@@ -96,7 +96,7 @@ module.exports = class InputManager {
 
   handlePause (cb) {
     if (this.child === null){
-      console.error("trying to pause when there is nothing playing")
+      log('trying to pause when there is nothing playing')
       cb("trying to pause when there is nothing playing")
     }
 
