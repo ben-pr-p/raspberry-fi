@@ -59,4 +59,3 @@ methods.bluetoothList = function () {
   })
 }
 export default methods
-
