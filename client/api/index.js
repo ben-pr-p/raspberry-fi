@@ -26,7 +26,7 @@ methods.addToQueue = function (link) {
         reject(err)
       }
 
-      return resolve(res)
+      return resolve(res.body)
     })
   })
 }
