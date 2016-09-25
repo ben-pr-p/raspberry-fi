@@ -10,7 +10,7 @@ if (!API_KEY) {
 }
 
 const opts = {
-  maxResults: 5,
+  maxResults: 10,
   key: API_KEY
 }
 
@@ -20,7 +20,7 @@ module.exports = function (value, fn) {
       return fn(err)
     }
 
-    return fn(null, results.map(r => processResult(r)))
+    return fn(null, results.map(r => processResult(r)).filter(r => r.kind != "youtube#channel" && r.kind != "youtube#playlist"))
   })
 }
 
@@ -29,6 +29,7 @@ function processResult (res) {
     link: res.link, // https://youtube.com/watch?v=${id}
     title: res.title, // string
     description: res.description, // string
-    thumbnail: res.thumbnails.default.url
+    thumbnail: res.thumbnails.default.url,
+    kind: res.kind
   }
 }
