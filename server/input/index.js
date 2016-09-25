@@ -7,19 +7,19 @@ const cp = require('child_process')
 module.exports = class InputManager {
   constructor (stream) {
     this.queue = []
-    this.playing = null
+    this.playing = null // name of whatever is playing
+    this.paused = null
   }
 
   pad (num) {
-    debugger
-    if(num < 10 || num == "0") return "0" + num.toString()
+    if(num === "") return "00"
+    else if(num < 10) return "0" + num.toString()
     else return num
   }
 
   handleAdd (link, fn) {
     console.log("ADDED SOMETHING ***** ")
     console.dir(this.playing)
-    console.dir(this.queue)
     let shouldStart = false
     if (this.queue.length == 0 && !this.playing) {
       shouldStart = true
@@ -38,6 +38,7 @@ module.exports = class InputManager {
       if (splitByM.length > 1) {
         minutes = this.pad(nopt.split('M')[0])
         seconds = this.pad(nopt.split('M')[1].split('S')[0])
+
       } else {
         seconds = this.pad(nopt.split('S')[0])
       }
@@ -63,6 +64,8 @@ module.exports = class InputManager {
 
   }
 
+
+
   closeChild (fn) {
     this.child.on('close', (code, signal) => {
       log('Child process killed...')
@@ -80,7 +83,7 @@ module.exports = class InputManager {
       return
     }
 
-    this.playing = this.queue.pop()
+    this.playing = this.queue.shift()
 
     if (this.child) {
       this.closeChild((done) => {
@@ -89,6 +92,18 @@ module.exports = class InputManager {
     } else {
       this.spawn()
     }
+  }
+
+  handlePause (cb) {
+    if (this.child === null){
+      console.error("trying to pause when there is nothing playing")
+      cb("trying to pause when there is nothing playing")
+    }
+
+    console.log("SUPPOSED TO PAUSE HERE")
+    this.child.send({message: 'pause'})
+
+    cb(null)
   }
 
   spawn () {

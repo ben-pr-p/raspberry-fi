@@ -19,8 +19,6 @@ app.get('/', (req, res) => {
  * Local dependencies
  */
 
-const queue = []
-
 const youtube = require('./youtube')
 
 const Output = require('./output')
@@ -51,7 +49,21 @@ app.get('/queue', (req, res) => {
   })
 })
 
+app.get('/resume', (req, res) => {
+  return res.send('resumed')
+})
+
+app.get('/pause', (req, res) => {
+  inManager.handlePause((err) => {
+    if (err) {
+      return res.status(500).send(err)
+    }
+    return res.send('paused')
+  })
+})
+
 app.get('/queue/add/:link', (req, res) => {
+  // queue returns an object {playing, queue}
   inManager.handleAdd(req.params.link, (err, queue) => {
     if (err) {
       return res.status(500).send(err)

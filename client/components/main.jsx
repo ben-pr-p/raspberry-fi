@@ -9,29 +9,37 @@ import FontIcon from 'material-ui/FontIcon'
 import Paper from 'material-ui/Paper'
 import Search from './search'
 import Queue from './queue'
+import api from '../api/index'
 import QueueSVG from 'material-ui/svg-icons/av/queue'
 import SearchSVG from 'material-ui/svg-icons/action/search'
 import NetworkSVG from 'material-ui/svg-icons/device/network-wifi'
-import {List, ListItem} from 'material-ui/List'
-import Subheader from 'material-ui/Subheader'
-import Divider from 'material-ui/Divider'
-import AudioTrack from 'material-ui/svg-icons/image/audiotrack'
-import QueueMusic from 'material-ui/svg-icons/av/queue-music'
-import MenuItem from 'material-ui/MenuItem'
-import api from '../api/index'
-import closest from 'component-closest'
-import Bluetooth from './bluetooth/bluetooth'
 
 export default class Main extends React.Component {
   constructor () {
     super()
     this.state = {
-      activeTab: 1 // 0: queue, 1: search, 2: devices
+      info : {playing: {}, queue: []},
+      activeTab: 0 // 0: queue, 1: search, 2: devices
     }
+  }
+
+  componentWillMount () {
+    api
+    .getQueue()
+    .then(info => {
+      this.setState(info)
+    })
+    .catch(err => {
+      debugger
+    })
   }
 
   select (tab) {
     this.setState({activeTab: tab});
+  }
+
+  handleQueueAdd (info) {
+    this.setState({info, activeTab: 0}) // sets the queue
   }
 
   render () {
@@ -44,13 +52,13 @@ export default class Main extends React.Component {
       case 1:
         console.log('Case 1')
         tab = (
-          <Search />
+          <Search handleQueueAdd = {this.handleQueueAdd.bind(this)}/>
         )
         break
       default:
         console.log('Case 0')
         tab = (
-          <Queue />
+          <Queue info={this.state.info}/>
         )
         break
     }
@@ -60,7 +68,7 @@ export default class Main extends React.Component {
         <Paper>
           {tab}
           <Paper zDepth={1}>
-            <BottomNavigation selectedIndex={this.state.selectedIndex}>
+            <BottomNavigation style={{position: 'fixed'}} selectedIndex={this.state.selectedIndex} className='bottom-navigation'>
               <BottomNavigationItem
                 label="Queue"
                 icon={<QueueSVG />}
@@ -83,3 +91,4 @@ export default class Main extends React.Component {
     )
   }
 }
+

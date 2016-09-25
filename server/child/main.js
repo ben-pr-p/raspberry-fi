@@ -39,3 +39,7 @@ function play (song) {
     log("Got error: %j", err)
   }
 }
+
+function pause (song) {
+  
+}
