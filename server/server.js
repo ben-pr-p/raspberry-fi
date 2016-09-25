@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
 
 const queue = []
 
-const search = require('./search')
+const youtube = require('./youtube')
 
 const Output = require('./output')
 const outManager = new Output()
@@ -34,7 +34,7 @@ const Input = require('./input')
 const inManager = new Input(setStream)
 
 app.get('/search/:value', (req, res) => {
-  search(req.params.value, (err, results) => {
+  youtube.search(req.params.value, (err, results) => {
     if (err) {
       return res.status(500).send(err)
     }
@@ -45,8 +45,9 @@ app.get('/search/:value', (req, res) => {
 })
 
 app.get('/queue/add/:link', (req, res) => {
-  inManager.handleAdd(req.params.link)
-  res.sendStatus(200)
+  inManager.handleAdd(req.params.link, (err, queue) => {
+    res.json(queue)
+  })
 })
 
 log('Listening on 3000...')
