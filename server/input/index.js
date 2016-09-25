@@ -9,7 +9,7 @@ module.exports = class InputManager {
     this.queue = []
     this.playing = null // name of whatever is playing
     this.paused = null
-    this.child = null
+    this.child = cp.fork('./server/child/main.js')
   }
 
   pad (num) {
@@ -18,7 +18,7 @@ module.exports = class InputManager {
     else return num
   }
 
-  skip () {
+  skip (fn) {
     console.log("SKIPPING **** ")
     // doesn't actually work
     return fn(null, {
@@ -86,7 +86,6 @@ module.exports = class InputManager {
 
   }
 
-
   closeChild (fn) {
     this.child.on('close', (code, signal) => {
       log('Child process killed...')
@@ -107,9 +106,7 @@ module.exports = class InputManager {
     this.playing = this.queue.shift()
 
     if (this.child) {
-      this.closeChild((done) => {
-        this.spawn()
-      })
+      this.spawn()
     } else {
       this.spawn()
     }
@@ -121,7 +118,6 @@ module.exports = class InputManager {
       cb("trying to pause when there is nothing playing")
     }
 
-    console.log("SUPPOSED TO PAUSE HERE")
     this.child.send({message: 'pause'})
 
     cb(null)
@@ -138,7 +134,9 @@ module.exports = class InputManager {
 
   spawn () {
     console.time('child')
-    this.child = cp.fork('./server/child/main.js')
+    if (!this.child) {
+      this.child = cp.fork('./server/child/main.js')
+    }
     this.child.send({message: 'song', data: this.playing})
 
     this.child.on('exit', (code, signal) => {
@@ -148,6 +146,13 @@ module.exports = class InputManager {
       console.timeEnd('child')
       this.playNext()
     })
+  }
+
+  connectTo (address) {
+    if (!this.child) {
+      this.child = cp.fork('./server/child/main.js')
+    }
+    this.child.send({message: 'bluetooth-connect', data: address})
   }
 }
 

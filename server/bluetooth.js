@@ -61,13 +61,19 @@ exports.toggleConnectionTo = function (address, fn) {
     log('Device %j lives on channel %s', device, channel)
     log('Connecting...')
 
-    btSerial.connect(device.address, channel)
+    btSerial.connect(device.address, channel, (err, nothing) => {
+      log('...connected')
+    })
 
     btSerial.on('data', (chunk) => {
       log('Received %j from %s', chunk, device.name)
     })
 
-    log('...connected')
+    const empty = Buffer.from(new Array(4608).fill(0))
+    btSerial.write(empty, (err, bytes) => {
+      log(err)
+      log(bytes)
+    })
 
     device.connected = true
     lastConnected = device
