@@ -4,8 +4,6 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const log = require('debug')('r-fi:app')
 
-const youtubeStream = require('youtube-audio-stream')
-
 const app = express()
 app.use(bodyParser.json())
 app.use(express.static('./build'))
@@ -21,10 +19,19 @@ app.get('/', (req, res) => {
  * Local dependencies
  */
 
-const search = require('./search')
-const Output = require('./output')
+const queue = []
 
-const manager = new Output()
+const search = require('./search')
+
+const Output = require('./output')
+const outManager = new Output()
+
+const setStream = (stream) => {
+  outManager.repipe(stream)
+}
+
+const Input = require('./input')
+const inManager = new Input(setStream)
 
 app.get('/search/:value', (req, res) => {
   search(req.params.value, (err, results) => {
@@ -37,10 +44,11 @@ app.get('/search/:value', (req, res) => {
   })
 })
 
-app.get('/play/:link', (req, res) => {
-  manager.repipe(youtubeStream(req.params.link))
+app.get('/queue/add/:link', (req, res) => {
+  inManager.handleAdd(req.params.link)
   res.sendStatus(200)
 })
 
 log('Listening on 3000...')
 app.listen('3000')
+

@@ -3,7 +3,15 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme'
 import AutoComplete from 'material-ui/AutoComplete'
+import AppBar from 'material-ui/AppBar'
+import RaisedButton from 'material-ui/RaisedButton'
+import Queue from 'material-ui/svg-icons/av/queue'
+import FontIcon from 'material-ui/FontIcon'
 import Paper from 'material-ui/Paper'
+import {List, ListItem} from 'material-ui/List'
+import Subheader from 'material-ui/Subheader'
+import Divider from 'material-ui/Divider'
+import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble'
 import MenuItem from 'material-ui/MenuItem'
 import api from '../api/index'
 import closest from 'component-closest'
@@ -39,25 +47,65 @@ export default class Main extends React.Component {
     const link = clicked.getAttribute('data')
 
     api
-    .play(link)
-    .then(() => null)
+    .addToQueue(link)
+    .then(ok => {
+      console.log(ok)
+    })
     .catch(err => {
       debugger
     })
   }
 
   render () {
+    const styles = {
+      button: {
+        margin: 12
+      },
+      exampleImageInput: {
+        cursor: 'pointer',
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0,
+        width: '100%',
+        opacity: 0
+      }
+    }
+    let songList = [
+      {name: 'cats'},
+      {name: 'dogs'},
+      {name: 'birds'}
+    ]
+
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-        <Paper>
-          <AutoComplete
-            hintText='Search a song'
-            dataSource={this.state.results}
-            onUpdateInput={this.handleInput.bind(this)}
-            fullWidth={true}
-            filter={AutoComplete.noFilter}
+        <div>
+          <AppBar
+            className="AppBar"
+            title="Raspberry Fi"
+            iconClassNameRight="muidocs-icon-navigation-expand-more"
           />
+          <Paper>
+          {this.renderListSongs(songList)}
         </Paper>
+         <Paper>
+            <AutoComplete
+              hintText='Search a song'
+              dataSource={this.state.results}
+              onUpdateInput={this.handleInput.bind(this)}
+              fullWidth={true}
+              filter={AutoComplete.noFilter}
+            />
+          </Paper>
+          <RaisedButton
+            label="ADD TO QUEUE"
+            labelPosition="before"
+            primary={true}
+            icon={<Queue />}
+            style={styles.button}
+          />
+        </div>
       </MuiThemeProvider>
     )
   }
@@ -76,5 +124,21 @@ export default class Main extends React.Component {
       )
     }
   }
-}
 
+  renderListSongs(songList) {
+    let songs = songList.map(s => {
+      return (
+        <ListItem
+          key={s.name}
+          primaryText={s.name}
+          rightIcon={<CommunicationChatBubble />}
+        />
+      )
+    })
+
+  return (<List>
+    <Subheader>Queue</Subheader>
+    {songs}
+  </List>)
+  }
+}
