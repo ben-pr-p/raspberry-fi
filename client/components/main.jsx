@@ -7,9 +7,11 @@ import RaisedButton from 'material-ui/RaisedButton'
 import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 import FontIcon from 'material-ui/FontIcon'
 import Paper from 'material-ui/Paper'
+import Search from './search'
 import Queue from './queue'
 import QueueSVG from 'material-ui/svg-icons/av/queue'
 import SearchSVG from 'material-ui/svg-icons/action/search'
+import NetworkSVG from 'material-ui/svg-icons/device/network-wifi'
 import {List, ListItem} from 'material-ui/List'
 import Subheader from 'material-ui/Subheader'
 import Divider from 'material-ui/Divider'
@@ -23,34 +25,35 @@ import Bluetooth from './bluetooth/bluetooth'
 export default class Main extends React.Component {
   constructor () {
     super()
-
     this.state = {
       activeTab: 0 // 0: queue, 1: search, 2: devices
     }
   }
 
   select (tab) {
-    this.state.activeTab = tab;
+    console.log ('selecting tab', tab)
+    this.setState({activeTab: tab});
   }
 
   render () {
-    const styles = {
-      button: {
-        margin: 12
-      }
-    }
 
     let tab
     switch (this.state.activeTab) {
       case 2:
         console.log('Case 2')
+        break
       case 1:
         console.log('Case 1')
+        tab = (
+          <Search />
+        )
+        break
       default:
         console.log('Case 0')
         tab = (
           <Queue />
         )
+        break
     }
 
     return (
@@ -71,7 +74,7 @@ export default class Main extends React.Component {
               />
               <BottomNavigationItem
                 label="Devices"
-                icon={<QueueMusic />}
+                icon={<NetworkSVG />}
                 onTouchTap={() => this.select(2)}
               />
             </BottomNavigation>
