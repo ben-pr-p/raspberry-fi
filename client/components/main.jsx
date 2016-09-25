@@ -94,7 +94,9 @@ export default class Main extends React.Component {
               hintText='Search a song'
               dataSource={this.state.results}
               onUpdateInput={this.handleInput.bind(this)}
-              fullWidth={true}
+              style={{
+                width:'80%',
+                margin: 'auto'}}
               filter={AutoComplete.noFilter}
             />
           </Paper>
@@ -137,7 +139,11 @@ export default class Main extends React.Component {
       )
     })
 
-    return (<List>
+    return (<List
+      style={{
+        width:'80%',
+        margin: 'auto'}}
+      >
       <Subheader>Queue</Subheader>
       {songs}
       </List>)
