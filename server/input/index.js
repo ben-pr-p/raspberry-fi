@@ -13,7 +13,7 @@ module.exports = class InputManager {
 
   handleAdd (link, fn) {
     let shouldStart = false
-    if (this.queue.length == 0) {
+    if (this.queue.length == 0 && !this.playing) {
       shouldStart = true
     }
 
