@@ -1,8 +1,9 @@
 import React from 'react'
 import Paper from 'material-ui/Paper'
 import {List, ListItem} from 'material-ui/List'
-import AudioTrack from 'material-ui/svg-icons/image/audiotrack'
-import QueueMusic from 'material-ui/svg-icons/av/queue-music'
+import PauseSVG from 'material-ui/svg-icons/av/pause-circle-outline'
+import PlaySVG from 'material-ui/svg-icons/av/play-circle-outline'
+import ClearSVG from 'material-ui/svg-icons/content/clear'
 import MenuItem from 'material-ui/MenuItem'
 import api from '../api/index'
 
@@ -32,7 +33,8 @@ export default class Queue extends React.Component {
           key={playing.name}
           primaryText={playing.name}
           secondaryText={playing.duration}
-          rightIcon={<AudioTrack />}
+          rightIcon={<PauseSVG />}
+          leftIcon={<ClearSVG />}
         />
       )
     }
@@ -45,7 +47,7 @@ export default class Queue extends React.Component {
           key={s.name}
           primaryText={s.name}
           secondaryText={s.duration}
-          rightIcon={<QueueMusic />}
+          leftIcon={<ClearSVG />}
         />
       )
     })
