@@ -26,11 +26,13 @@ export default class Main extends React.Component {
   }
 
   handleInput (value) {
+
+
     if (value && value != '') {
       api
       .search(value)
       .then(results => {
-        console.log(results)
+
         const rendered = results.map(r => this.renderResult(r))
         this.setState({results: rendered})
       })
@@ -93,6 +95,7 @@ export default class Main extends React.Component {
               dataSource={this.state.results}
               onUpdateInput={this.handleInput.bind(this)}
               fullWidth={true}
+              filter={AutoComplete.noFilter}
             />
           </Paper>
           <RaisedButton
@@ -126,9 +129,10 @@ export default class Main extends React.Component {
     let songs = songList.map(s => {
       return (
         <ListItem
-        primaryText={s.name}
-        secondaryText={s.artist}
-        rightIcon={<CommunicationChatBubble />}
+          key={s.name}
+          primaryText={s.name}
+          secondaryText={s.artist}
+          rightIcon={<CommunicationChatBubble />}
         />
       )
     })
