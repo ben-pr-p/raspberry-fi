@@ -1,6 +1,6 @@
 'use strict'
 
-const wired = require('./wired')
+const wired = require('./speakers/wired')
 
 const lame = require('lame')
 const decoder = lame.Decoder()
@@ -17,11 +17,14 @@ module.exports = class OutputManager {
 
   // takes in audio stream
   repipe (inputStream) {
+
     // to write
     this.outputs.forEach((output) => {
+      output.resetSpeaker()
+
         inputStream
           .pipe(decoder)
-          .pipe(output) // pipe the input to output
+          .pipe(output.speaker) // pipe the input to output
     })
   }
 

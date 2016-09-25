@@ -4,9 +4,9 @@ const log = require('debug')('r-fi:input')
 const youtube = require('../youtube')
 
 module.exports = class InputManager {
-  constructor (setStream) {
+  constructor (stream) {
     this.queue = []
-    this.setStream = setStream
+    this.setStream = stream 
     this.currentStream = null
     this.playing = null
   }
@@ -53,8 +53,11 @@ module.exports = class InputManager {
     this.currentStream = youtube.streamAudio(this.playing.id)
 
     this.currentStream.on('end', () => {
+      console.log("END EVENT EMITTED ****")
       this.playNext()
     })
+
+    console.log("ending the stream")
 
     this.setStream(this.currentStream)
   }
