@@ -4,9 +4,14 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme'
 import AutoComplete from 'material-ui/AutoComplete'
 import RaisedButton from 'material-ui/RaisedButton'
-import Queue from 'material-ui/svg-icons/av/queue'
+import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 import FontIcon from 'material-ui/FontIcon'
 import Paper from 'material-ui/Paper'
+import Search from './search'
+import Queue from './queue'
+import QueueSVG from 'material-ui/svg-icons/av/queue'
+import SearchSVG from 'material-ui/svg-icons/action/search'
+import NetworkSVG from 'material-ui/svg-icons/device/network-wifi'
 import {List, ListItem} from 'material-ui/List'
 import Subheader from 'material-ui/Subheader'
 import Divider from 'material-ui/Divider'
@@ -20,148 +25,62 @@ import Bluetooth from './bluetooth/bluetooth'
 export default class Main extends React.Component {
   constructor () {
     super()
-
     this.state = {
-      playing: null,
-      queue: [],
-      results: []
+      activeTab: 0 // 0: queue, 1: search, 2: devices
     }
   }
 
-  componentWillMount () {
-    api
-    .getQueue()
-    .then(info => {
-      this.setState(info)
-    })
-    .catch(err => {
-      debugger
-    })
-  }
-
-  selectVideo (ev) {
-    const clicked = closest(ev.target, '.video-result', true)
-    const link = clicked.getAttribute('data')
-
-    api
-    .addToQueue(link)
-    .then(info => {
-      console.log(info)
-      this.setState(info)
-    })
-    .catch(err => {
-      debugger
-    })
-  }
-
-  handleInput (value) {
-    if (value && value != '') {
-      api
-      .search(value)
-      .then(results => {
-
-        const rendered = results.map(r => this.renderResult(r))
-        this.setState({results: rendered})
-      })
-      .catch(err => {
-        debugger
-      })
-    }
+  select (tab) {
+    console.log ('selecting tab', tab)
+    this.setState({activeTab: tab});
   }
 
   render () {
-    const styles = {
-      button: {
-        margin: 12
-      },
-      exampleImageInput: {
-        cursor: 'pointer',
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        right: 0,
-        left: 0,
-        width: '100%',
-        opacity: 0
-      }
+
+    let tab
+    switch (this.state.activeTab) {
+      case 2:
+        console.log('Case 2')
+        break
+      case 1:
+        console.log('Case 1')
+        tab = (
+          <Search />
+        )
+        break
+      default:
+        console.log('Case 0')
+        tab = (
+          <Queue />
+        )
+        break
     }
 
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-        <div>
-          <Paper>
-            {this.renderListSongs(this.state.queue)}
+        <Paper>
+          {tab}
+          <Paper zDepth={1}>
+            <BottomNavigation selectedIndex={this.state.selectedIndex}>
+              <BottomNavigationItem
+                label="Queue"
+                icon={<QueueSVG />}
+                onTouchTap={() => this.select(0)}
+              />
+              <BottomNavigationItem
+                label="Search"
+                icon={<SearchSVG />}
+                onTouchTap={() => this.select(1)}
+              />
+              <BottomNavigationItem
+                label="Devices"
+                icon={<NetworkSVG />}
+                onTouchTap={() => this.select(2)}
+              />
+            </BottomNavigation>
           </Paper>
-          <Paper>
-            <AutoComplete
-              hintText='Search a song'
-              dataSource={this.state.results}
-              onUpdateInput={this.handleInput.bind(this)}
-              style={{
-                width:'80%',
-                margin: 'auto'}}
-              filter={AutoComplete.noFilter}
-            />
-          </Paper>
-          <RaisedButton
-            label="ADD TO QUEUE"
-            labelPosition="before"
-            primary={true}
-            icon={<Queue />}
-            style={styles.button}
-          />
-        </div>
+        </Paper>
       </MuiThemeProvider>
     )
   }
-
-  renderResult (video) {
-    return {
-      text: video.title,
-      value: (
-        <MenuItem className='video-result'
-          onClick={this.selectVideo.bind(this)}
-          data={video.link}
-        >
-        <img src={video.thumbnail} />
-        {video.title}
-        </MenuItem>
-      )
-    }
-  }
-
-  renderCurrentSong() {
-    if (this.state.playing != null) {
-      return (
-        <ListItem
-          key={this.state.playing.name}
-          primaryText={this.state.playing.name}
-          secondaryText={this.state.playing.duration}
-          rightIcon={<AudioTrack />}
-        />
-      )
-    }
-  }
-
-  renderListSongs(songList) {
-    let songs = songList.map(s => {
-      return (
-        <ListItem
-          key={s.name}
-          primaryText={s.name}
-          secondaryText={s.duration}
-          rightIcon={<QueueMusic />}
-        />
-      )
-    })
-
-    return (
-      <List style={{ width:'80%', margin: 'auto'}} >
-        <Subheader>Queue</Subheader>
-          {this.renderCurrentSong()}
-          {songs}
-      </List>
-    )
-  }
 }
-

@@ -10,7 +10,15 @@ module.exports = class InputManager {
     this.playing = null
   }
 
+  pad (num) {
+    if(num < 10) return "0" + num
+    else return num
+  }
+
   handleAdd (link, fn) {
+    console.log("ADDED SOMETHING ***** ")
+    console.dir(this.playing)
+    console.dir(this.queue)
     let shouldStart = false
     if (this.queue.length == 0 && !this.playing) {
       shouldStart = true
@@ -25,11 +33,12 @@ module.exports = class InputManager {
       const splitByM = nopt.split('M')
       let minutes = 0
       let seconds = 0
+      let hours = 0
       if (splitByM.length > 1) {
-        minutes = nopt.split('M')[0]
-        seconds = nopt.split('M')[1].split('S')[0]
+        minutes = this.pad(nopt.split('M')[0])
+        seconds = this.pad(nopt.split('M')[1].split('S')[0])
       } else {
-        seconds = nopt.split('S')[0]
+        seconds = this.pad(nopt.split('S')[0])
       }
 
       const video = {
@@ -66,6 +75,7 @@ module.exports = class InputManager {
 
   playNext () {
     if (this.queue.length == 0) {
+      console.log("NO MORE SONGS")
       return
     }
 
