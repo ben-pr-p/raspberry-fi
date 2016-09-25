@@ -1,17 +1,9 @@
 import React from 'react'
 import AutoComplete from 'material-ui/AutoComplete'
-import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
-import FontIcon from 'material-ui/FontIcon'
 import Paper from 'material-ui/Paper'
-import {List, ListItem} from 'material-ui/List'
-import Subheader from 'material-ui/Subheader'
-import Divider from 'material-ui/Divider'
-import AudioTrack from 'material-ui/svg-icons/image/audiotrack'
-import QueueMusic from 'material-ui/svg-icons/av/queue-music'
 import MenuItem from 'material-ui/MenuItem'
 import api from '../api/index'
 import closest from 'component-closest'
-import Bluetooth from './bluetooth/bluetooth'
 
 export default class Search extends React.Component {
   constructor () {
@@ -29,8 +21,7 @@ export default class Search extends React.Component {
     api
     .addToQueue(link)
     .then(info => {
-      console.log(info)
-      this.setState(info)
+      this.props.handleQueueAdd(info)
     })
     .catch(err => {
       debugger
