@@ -22,8 +22,16 @@ module.exports = class InputManager {
       const duration = result.items[0].contentDetails.duration
 
       const nopt = duration.slice(2)
-      const minutes = nopt.split('M')[0]
-      const seconds = nopt.split('M')[1].split('S')[0]
+
+      const splitByM = nopt.split('M')
+      let minutes = 0
+      let seconds = 0
+      if (splitByM.length > 0) {
+        minutes = nopt.split('M')[0]
+        seconds = nopt.split('M')[1].split('S')[0]
+      } else {
+        seconds = nopt.split('S')[0]
+      }
 
       const video = {
         name: labels.title,

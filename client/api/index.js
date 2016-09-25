@@ -45,4 +45,18 @@ methods.getQueue = function () {
   })
 }
 
+methods.bluetoothList = function () {
+  return new Promise((resolve, reject) => {
+    request
+    .get('bluetooth/list')
+    .end((err, res) => {
+      if (err) {
+        return reject(err)
+      }
+
+      return resolve(res.body)
+    })
+  })
+}
 export default methods
+

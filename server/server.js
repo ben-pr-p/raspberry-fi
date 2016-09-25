@@ -53,7 +53,21 @@ app.get('/queue', (req, res) => {
 
 app.get('/queue/add/:link', (req, res) => {
   inManager.handleAdd(req.params.link, (err, queue) => {
-    res.json(queue)
+    if (err) {
+      return res.status(500).send(err)
+    }
+
+    return res.json(queue)
+  })
+})
+
+app.get('/bluetooth/list', (req, res) => {
+  outManager.getDevices((err, result) => {
+    if (err) {
+      return res.status(500).send(err)
+    }
+
+    return res.json(result)
   })
 })
 
