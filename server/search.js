@@ -10,7 +10,7 @@ if (!API_KEY) {
 }
 
 const opts = {
-  maxResults: 10,
+  maxResults: 5,
   key: API_KEY
 }
 

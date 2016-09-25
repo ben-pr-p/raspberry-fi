@@ -18,11 +18,13 @@ export default class Main extends React.Component {
   }
 
   handleInput (value) {
+
+
     if (value && value != '') {
       api
       .search(value)
       .then(results => {
-        console.log(results)
+
         const rendered = results.map(r => this.renderResult(r))
         this.setState({results: rendered})
       })
@@ -38,9 +40,7 @@ export default class Main extends React.Component {
 
     api
     .play(link)
-    .then(ok => {
-      console.log(ok)
-    })
+    .then(() => null)
     .catch(err => {
       debugger
     })
@@ -55,6 +55,7 @@ export default class Main extends React.Component {
             dataSource={this.state.results}
             onUpdateInput={this.handleInput.bind(this)}
             fullWidth={true}
+            filter={AutoComplete.noFilter}
           />
         </Paper>
       </MuiThemeProvider>
