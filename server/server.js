@@ -19,7 +19,19 @@ app.get('/', (req, res) => {
  * Local dependencies
  */
 
+const queue = []
+
 const search = require('./search')
+
+const Output = require('./output')
+const outManager = new Output()
+
+const setStream = (stream) => {
+  outManager.repipe(stream)
+}
+
+const Input = require('./input')
+const inManager = new Input(setStream)
 
 app.get('/search/:value', (req, res) => {
   search(req.params.value, (err, results) => {
@@ -32,5 +44,11 @@ app.get('/search/:value', (req, res) => {
   })
 })
 
+app.get('/queue/add/:link', (req, res) => {
+  inManager.handleAdd(req.params.link)
+  res.sendStatus(200)
+})
+
 log('Listening on 3000...')
 app.listen('3000')
+

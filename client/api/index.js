@@ -16,4 +16,19 @@ methods.search = function (value) {
   })
 }
 
+methods.addToQueue = function (link) {
+  const id = link.split('=')[1]
+  return new Promise((resolve, reject) => {
+    request
+    .get(`queue/add/${id}`)
+    .end((err, res) => {
+      if (err) {
+        reject(err)
+      }
+
+      return resolve(res)
+    })
+  })
+}
+
 export default methods
