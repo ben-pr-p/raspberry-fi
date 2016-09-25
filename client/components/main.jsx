@@ -37,7 +37,7 @@ export default class Main extends React.Component {
     const link = clicked.getAttribute('data')
 
     api
-    .play(link)
+    .addToQueue(link)
     .then(ok => {
       console.log(ok)
     })
