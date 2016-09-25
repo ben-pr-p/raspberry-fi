@@ -27,19 +27,15 @@ export default class Main extends React.Component {
     }
   }
 
-  handleInput (value) {
-    if (value && value != '') {
-      api
-      .search(value)
-      .then(results => {
-
-        const rendered = results.map(r => this.renderResult(r))
-        this.setState({results: rendered})
-      })
-      .catch(err => {
-        debugger
-      })
-    }
+  componentWillMount () {
+    api
+    .getQueue()
+    .then(info => {
+      this.setState(info)
+    })
+    .catch(err => {
+      debugger
+    })
   }
 
   selectVideo (ev) {
@@ -55,6 +51,21 @@ export default class Main extends React.Component {
     .catch(err => {
       debugger
     })
+  }
+
+  handleInput (value) {
+    if (value && value != '') {
+      api
+      .search(value)
+      .then(results => {
+
+        const rendered = results.map(r => this.renderResult(r))
+        this.setState({results: rendered})
+      })
+      .catch(err => {
+        debugger
+      })
+    }
   }
 
   render () {
