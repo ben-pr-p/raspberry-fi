@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
 const youtube = require('./youtube')
 
 const Input = require('./input')
-const inManager = new Input(setStream)
+const inManager = new Input()
 
 const bluetooth = require('./bluetooth')
 
