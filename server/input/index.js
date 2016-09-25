@@ -2,12 +2,11 @@
 
 const log = require('debug')('r-fi:input')
 const youtube = require('../youtube')
+const cp = require('child_process')
 
 module.exports = class InputManager {
   constructor (stream) {
     this.queue = []
-    this.setStream = stream 
-    this.currentStream = null
     this.playing = null
   }
 
@@ -40,6 +39,8 @@ module.exports = class InputManager {
       }
 
       this.queue.push(video)
+      log('%j added to queue', video)
+
       if (shouldStart) {
         this.playNext()
       }
@@ -52,46 +53,45 @@ module.exports = class InputManager {
 
   }
 
+  closeChild (fn) {
+    this.child.on('close', (code, signal) => {
+      log('Child process killed...')
+      this.child = null
+      console.timeEnd('child')
+      return fn(null)
+    })
+
+    this.child.kill()
+  }
+
   playNext () {
-    console.log("AT BEGINNING OF PLAY NEXT")
-    console.dir(this.queue)
     if (this.queue.length == 0) {
       return
     }
 
-    try {
-      console.log("POP ****")
-      this.playing = this.queue.pop()
-      console.dir(this.playing)
+    this.playing = this.queue.pop()
 
-      this.currentStream = youtube.streamAudio(this.playing.id)
-
-      this.setStream(this.currentStream) // pipe to output
-      console.log("CURRENT STREAM SET ****")
-
-
-      this.currentStream.on('data', (chunk) => {
-        log(chunk)
-        log(chunk.length)
+    if (this.child) {
+      this.closeChild((done) => {
+        this.spawn()
       })
-      this.currentStream.on('error', () => {
-        log("END EVENT ERROR ****")
-        this.playNext()
-      })
-      this.currentStream.on('close', () => {
-        log(" EVENT CLOSE ****")
-        this.playNext()
-      })
-      this.currentStream.on('end', () => {
-        log(" EVENT END ****")
-        this.playNext()
-      })
-
+    } else {
+      this.spawn()
     }
-    catch (err) {
-      log("OSDIJFOSIDJF")
+  }
 
-    }
-  
+  spawn () {
+    console.time('child')
+    this.child = cp.fork('./server/child/main.js')
+    this.child.send({message: 'song', data: this.playing})
+
+    this.child.on('exit', (code, signal) => {
+      log('Child process suicided...')
+      this.child = null
+      this.playing = null
+      console.timeEnd('child')
+      this.playNext()
+    })
   }
 }
+

@@ -23,15 +23,8 @@ const queue = []
 
 const youtube = require('./youtube')
 
-const Output = require('./output')
-const outManager = new Output()
-
-const setStream = (stream) => {
-  outManager.repipe(stream)
-}
-
 const Input = require('./input')
-const inManager = new Input(setStream)
+const inManager = new Input()
 
 app.get('/search/:value', (req, res) => {
   youtube.search(req.params.value, (err, results) => {
