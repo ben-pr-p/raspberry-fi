@@ -89,7 +89,6 @@ export default class Main extends React.Component {
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
         <div>
-          <MyAppBar />
           <Paper>
             {this.renderListSongs(this.state.queue)}
           </Paper>
