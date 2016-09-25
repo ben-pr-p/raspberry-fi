@@ -62,22 +62,12 @@ export default class Main extends React.Component {
     const styles = {
       button: {
         margin: 12
-      },
-      exampleImageInput: {
-        cursor: 'pointer',
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        right: 0,
-        left: 0,
-        width: '100%',
-        opacity: 0
       }
     }
 
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-        <div>
+        <Paper>
           <AppBar
             className="AppBar"
             title="Raspberry Fi"
@@ -91,9 +81,10 @@ export default class Main extends React.Component {
               hintText='Search a song'
               dataSource={this.state.results}
               onUpdateInput={this.handleInput.bind(this)}
-              style={{
-                width:'80%',
-                margin: 'auto'}}
+              className='list'
+              menuCloseDelay={500000}
+              fullWidth={true}
+              style={{width:'80%', display: 'block', margin: 'auto', fontSize:'25px'}}
               filter={AutoComplete.noFilter}
             />
           </Paper>
@@ -104,7 +95,7 @@ export default class Main extends React.Component {
             icon={<Queue />}
             style={styles.button}
           />
-        </div>
+        </Paper>
       </MuiThemeProvider>
     )
   }
@@ -118,7 +109,11 @@ export default class Main extends React.Component {
           data={video.link}
         >
         <img src={video.thumbnail} />
-        {video.title}
+        <div className='video-title'>
+          <div className='video-title-text' >
+            {video.title}
+          </div>
+        </div>
         </MenuItem>
       )
     }
@@ -150,9 +145,7 @@ export default class Main extends React.Component {
     })
 
     return (<List
-      style={{
-        width:'80%',
-        margin: 'auto'}}
+      className='list'
       >
       <Subheader>Queue</Subheader>
       {this.renderCurrentSong()}
