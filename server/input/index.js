@@ -45,11 +45,15 @@ module.exports = class InputManager {
   }
 
   playNext () {
+    console.log("AT BEGINNING OF PLAY NEXT")
+    console.dir(this.queue)
     if (this.queue.length == 0) {
       return
     }
 
+
     this.playing = this.queue.pop()
+
     this.currentStream = youtube.streamAudio(this.playing.id)
 
     this.currentStream.on('end', () => {
@@ -57,7 +61,7 @@ module.exports = class InputManager {
       this.playNext()
     })
 
-    console.log("ending the stream")
+    console.log("ending the stream *** ")
 
     this.setStream(this.currentStream)
   }
