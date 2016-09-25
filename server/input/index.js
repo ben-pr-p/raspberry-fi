@@ -79,7 +79,7 @@ module.exports = class InputManager {
       return
     }
 
-    this.playing = this.queue.pop()
+    this.playing = this.queue.unshift()
 
     if (this.child) {
       this.closeChild((done) => {

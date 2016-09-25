@@ -19,8 +19,6 @@ app.get('/', (req, res) => {
  * Local dependencies
  */
 
-const queue = []
-
 const youtube = require('./youtube')
 
 const Input = require('./input')

@@ -10,14 +10,14 @@ import api from '../api/index'
 export default class Queue extends React.Component {
   constructor () {
     super()
-	}
+  }
 
   render () {
     const {playing, queue} = this.props.info
-		console.log('returning queue')
+    console.log('returning queue')
 
     return (
-			<Paper>
+      <Paper>
         {this.renderListSongs(queue)}
       </Paper>
     )
@@ -58,5 +58,5 @@ export default class Queue extends React.Component {
       {this.renderCurrentSong()}
       {songs}
     </List>)
-	}
+  }
 }
