@@ -16,6 +16,32 @@ methods.search = function (value) {
   })
 }
 
+methods.resume = function(){
+  return new Promise((resolve, reject) => {
+    request
+    .get(`resume`)
+    .end((err, res) => {
+      if (err) {
+        return reject(err)
+      }
+      return resolve(res.body)
+    })
+  })
+}
+
+methods.pauseSong = function (name) {
+  return new Promise((resolve, reject) => {
+    request
+    .get(`pause`)
+    .end((err, res) => {
+      if (err) {
+        return reject(err)
+      }
+      return resolve(res.body)
+    })
+  })
+}
+
 methods.addToQueue = function (link) {
   const id = link.split('=')[1]
   return new Promise((resolve, reject) => {

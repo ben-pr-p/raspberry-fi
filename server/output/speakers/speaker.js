@@ -13,10 +13,8 @@ module.exports = class SpeakerController {
   }
 
   resetSpeaker() {
-    console.log("RESETTING SPEAKER **** ")
     this.speaker.close()
     this.speaker.end()
-    console.log("****** after close")
     this.speaker = new Speaker(this.opts)
   }
 } 

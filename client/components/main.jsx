@@ -2,7 +2,10 @@ import React from 'react'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme'
-import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
+import AutoComplete from 'material-ui/AutoComplete'
+import RaisedButton from 'material-ui/RaisedButton'
+import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
+import FontIcon from 'material-ui/FontIcon'
 import Paper from 'material-ui/Paper'
 import Search from './search'
 import Queue from './queue'
@@ -33,12 +36,11 @@ export default class Main extends React.Component {
   }
 
   select (tab) {
-    console.log ('selecting tab', tab)
     this.setState({activeTab: tab});
   }
 
   handleQueueAdd (info) {
-    this.setState({info, activeTab: 0})
+    this.setState({info, activeTab: 0}) // sets the queue
   }
 
   render () {
@@ -53,7 +55,7 @@ export default class Main extends React.Component {
       case 1:
         console.log('Case 1')
         tab = (
-          <Search handleQueueAdd={this.handleQueueAdd.bind(this)}/>
+          <Search className='search' handleQueueAdd={this.handleQueueAdd.bind(this)}/>
         )
         break
       default:
