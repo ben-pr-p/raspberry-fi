@@ -73,11 +73,6 @@ export default class Main extends React.Component {
         opacity: 0
       }
     }
-    let songList = [
-      {name: 'cats', artist: 'dj'},
-      {name: 'dogs', artist: 'money'},
-      {name: 'birds', artist: 'bags'}
-    ]
 
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
@@ -88,7 +83,7 @@ export default class Main extends React.Component {
             iconClassNameRight="muidocs-icon-navigation-expand-more"
           />
           <Paper>
-            {this.renderListSongs(songList)}
+            {this.renderListSongs(this.state.queue)}
           </Paper>
           <Paper>
             <AutoComplete
@@ -128,13 +123,26 @@ export default class Main extends React.Component {
     }
   }
 
+  renderCurrentSong() {
+    if (this.state.playing != null) {
+      return (
+        <ListItem
+          key={this.state.playing.name}
+          primaryText={this.state.playing.name}
+          secondaryText={this.state.playing.duration}
+          rightIcon={<CommunicationChatBubble />}
+        />
+      )
+    }
+  }
+
   renderListSongs(songList) {
     let songs = songList.map(s => {
       return (
         <ListItem
           key={s.name}
           primaryText={s.name}
-          secondaryText={s.artist}
+          secondaryText={s.duration}
           rightIcon={<CommunicationChatBubble />}
         />
       )
@@ -146,6 +154,7 @@ export default class Main extends React.Component {
         margin: 'auto'}}
       >
       <Subheader>Queue</Subheader>
+      {this.renderCurrentSong()}
       {songs}
       </List>)
     }
