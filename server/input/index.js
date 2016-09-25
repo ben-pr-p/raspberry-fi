@@ -106,6 +106,15 @@ module.exports = class InputManager {
     cb(null)
   }
 
+  resume (cb) {
+    if (this.child === null){
+      console.error("should be a child... but we can hack this if not")
+      cb(null)
+    }
+    this.child.send({message: 'resume'})
+    cb(null)
+  }
+
   spawn () {
     console.time('child')
     this.child = cp.fork('./server/child/main.js')

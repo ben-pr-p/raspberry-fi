@@ -52,7 +52,7 @@ export default class Main extends React.Component {
       case 1:
         console.log('Case 1')
         tab = (
-          <Search handleQueueAdd = {this.handleQueueAdd.bind(this)}/>
+          <Search className='search' handleQueueAdd = {this.handleQueueAdd.bind(this)}/>
         )
         break
       default:

@@ -19,6 +19,9 @@ process.on('message', ({message, data}) => {
   if (message == 'pause') {
     pause()
   }
+  if (message == 'resume') {
+    resume()
+  }
 })
 
 function play (song) {
@@ -41,5 +44,10 @@ function play (song) {
 }
 
 function pause (song) {
-  
+  console.log("PAUSING")
+  output.pause()
+}
+
+function resume () {
+  output.resume()
 }

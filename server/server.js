@@ -50,7 +50,12 @@ app.get('/queue', (req, res) => {
 })
 
 app.get('/resume', (req, res) => {
-  return res.send('resumed')
+  return inManager.resume((err) => {
+    if (err) {
+      return res.status(500).send(err)
+    }
+    return res.send('resumed')
+  })
 })
 
 app.get('/pause', (req, res) => {
