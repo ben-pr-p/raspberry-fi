@@ -61,6 +61,7 @@ export default class Queue extends React.Component {
     api
     .skip()
       .then(info => {
+        console.log(info)
         this.props.handleDelete(info)
       })
       .catch(err => {

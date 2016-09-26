@@ -19,13 +19,13 @@ module.exports = class InputManager {
   }
 
   skip (fn) {
-    console.log("SKIPPING **** ")
-    // doesn't actually work
+    this.child.kill()
+    console.log("SKIPPED. NOW PLAYING:")
+    console.log(this.queue[0])
     return fn(null, {
-      playing: this.playing,
-      queue: this.queue
+      playing: this.queue[0],
+      queue: this.queue.slice(1,this.queue.length)
     })
-    // this.playNext()
   }
 
   delete(name, fn) {

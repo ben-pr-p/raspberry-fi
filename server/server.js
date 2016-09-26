@@ -45,11 +45,8 @@ app.get('/queue', (req, res) => {
 })
 
 app.get('/skip', (req, res) => {
-  return inManager.skip((err) => {
-    return res.json({
-      playing: inManager.playing,
-      queue: inManager.queue
-    })
+  return inManager.skip((err, info) => {
+    return res.json(info)
   })
 })
 

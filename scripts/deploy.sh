@@ -1,3 +1,5 @@
+sudo apt-get install build-essential libbluetooth-dev
+
 cd /usr/src
 sudo git clone git://git.videolan.org/x264
 cd x264
