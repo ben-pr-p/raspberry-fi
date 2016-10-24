@@ -18,7 +18,6 @@ export default class Queue extends React.Component {
   }
 
   render () {
-    debugger
     const {playing, queue} = this.props.info
 
     return (
@@ -30,15 +29,13 @@ export default class Queue extends React.Component {
 
   buttonPressed(toPause) {
     this.setState({paused: toPause})
-    if(toPause){
-      console.log("GOING TO PAUSE")
+    if (toPause){
       api
-        .pauseSong()
-        .catch(err => {
-          debugger
-        })
+      .pauseSong()
+      .catch(err => {
+        debugger
+      })
     } else {
-      console.log("GOING TO PLAY")
       api
       .resume()
       .catch(err => {
@@ -49,26 +46,25 @@ export default class Queue extends React.Component {
 
   deleteSong (link) {
     api.deleteFromQueue(link)
-      .then(info => {
-        this.props.handleDelete(info)
-      })
-      .catch(err => {
-        console.error('deleting not working')
-      })
+    .then(info => {
+      this.props.handleDelete(info)
+    })
+    .catch(err => {
+      console.error('deleting not working')
+    })
   }
 
   skipSong() {
     api
     .skip()
-      .then(info => {
-        console.log(info)
-        this.props.handleDelete(info)
-      })
-      .catch(err => {
-        console.error('skip failed')
-      })
+    .then(info => {
+      console.log(info)
+      this.props.handleDelete(info)
+    })
+    .catch(err => {
+      console.error('skip failed')
+    })
   }
-
 
   renderCurrentSong() {
     const {playing, queue, paused} = this.props.info // what is playing is never in queued
@@ -80,7 +76,7 @@ export default class Queue extends React.Component {
           key={playing.name}
           primaryText={playing.name}
           secondaryText={playing.duration}
-          rightIconButton={this.state.paused ? 
+          rightIconButton={this.state.paused ?
              (<IconButton onTouchTap={this.buttonPressed.bind(this, false)}><PlaySVG /></IconButton>):
              (<IconButton onTouchTap={this.buttonPressed.bind(this, true)}><PauseSVG /></IconButton>)
            }
@@ -97,16 +93,17 @@ export default class Queue extends React.Component {
           key={s.name}
           primaryText={s.name}
           secondaryText={s.duration}
+          className='queue-item'
           leftIcon={<IconButton onTouchTap={this.deleteSong.bind(this, s.name)}><ClearSVG /></IconButton>}
         />
       )
     })
 
-    return (<List
-      className='list'
-      >
-      {this.renderCurrentSong()}
-      {songs}
-    </List>)
+    return (
+      <List className='list'>
+        {this.renderCurrentSong()}
+        {songs}
+      </List>
+    )
   }
 }

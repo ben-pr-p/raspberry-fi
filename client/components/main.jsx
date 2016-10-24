@@ -83,16 +83,19 @@ export default class Main extends React.Component {
             <BottomNavigation style={{position: 'fixed'}} selectedIndex={this.state.selectedIndex} className='bottom-navigation'>
               <BottomNavigationItem
                 label="Queue"
+                className='nav-item'
                 icon={<QueueSVG />}
                 onTouchTap={() => this.select(0)}
               />
               <BottomNavigationItem
                 label="Search"
+                className='nav-item'
                 icon={<SearchSVG />}
                 onTouchTap={() => this.select(1)}
               />
               <BottomNavigationItem
                 label="Devices"
+                className='nav-item'
                 icon={<NetworkSVG />}
                 onTouchTap={() => this.select(2)}
               />
@@ -103,4 +106,3 @@ export default class Main extends React.Component {
     )
   }
 }
-

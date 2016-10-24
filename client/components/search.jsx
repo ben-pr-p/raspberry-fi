@@ -44,16 +44,15 @@ export default class Search extends React.Component {
   }
 
   render () {
-		console.log('returning search')
-
     return (
 			<Paper>
         <AutoComplete
-          hintText='Search a song'
+          hintText={<span className='big-text'>Search a song</span>}
           dataSource={this.state.results}
           onUpdateInput={this.handleInput.bind(this)}
           className='list'
           fullWidth={true}
+          className='auto-complete'
           style={{width:'80%', display: 'block', margin: 'auto', fontSize:'25px'}}
           filter={AutoComplete.noFilter}
         />

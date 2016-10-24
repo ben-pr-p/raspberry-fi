@@ -50,14 +50,8 @@ module.exports = function (address, fn) {
     data.speaker = new stream.Writable({
       write: function (chunk, encoding, done) {
         btSerial.write(chunk, (err, bytesWritten) => {
-          log(err)
           if (err) {
             log(err)
-          }
-
-          else {
-            log(bytesWritten)
-            log('Wrote %d bytes', bytesWritten)
           }
 
           done()
